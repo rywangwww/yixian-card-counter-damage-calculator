@@ -16,6 +16,12 @@
       <button id="settings-button" class="control-button" type="button" data-i18n="btn.set">Set</button>
     </div>
     <div id="settings-panel" class="settings-panel hidden">
+      <div class="settings-label" data-i18n="label.calibration">Calibration</div>
+      <button id="calibrate-button" class="toggle-option" type="button" data-i18n="btn.calibrate">Calibrate</button>
+      <div id="calibration-progress" class="calibration-progress">
+        <div id="calibration-progress-fill" class="calibration-progress-fill"></div>
+      </div>
+      <div id="calibration-status" class="calibration-status"></div>
       <div class="settings-label" data-i18n="label.damage">Damage</div>
       <button id="roll-average" class="roll-option" type="button" data-roll-mode="average" data-i18n="roll.average">Average</button>
       <button id="roll-high"    class="roll-option" type="button" data-roll-mode="high"    data-i18n="roll.high">High Roll</button>
@@ -28,12 +34,6 @@
       <button id="card-list-mode-low"      class="toggle-option" type="button" data-card-list-mode="low-stock" data-i18n="cardListMode.lowStock">Remaining &lt; 2</button>
       <div class="settings-label" data-i18n="label.debug">Debug</div>
       <button id="debug-mode-button" class="toggle-option" type="button" data-i18n="btn.debug">Debug</button>
-      <div class="settings-label" data-i18n="label.calibration">Calibration</div>
-      <button id="calibrate-button" class="toggle-option" type="button" data-i18n="btn.calibrate">Calibrate</button>
-      <div id="calibration-progress" class="calibration-progress">
-        <div id="calibration-progress-fill" class="calibration-progress-fill"></div>
-      </div>
-      <div id="calibration-status" class="calibration-status"></div>
       <div class="settings-label" data-i18n="label.app">App</div>
       <button id="quit-button" class="toggle-option danger" type="button" data-i18n="btn.quit">Quit</button>
     </div>
