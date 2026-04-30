@@ -339,24 +339,42 @@ function getCaptureOverlayMetrics(screenshotSize = null) {
   let overlaySize = dpiOverlaySize;
   let overlayBasis = 'dpi';
   if (contentOverlaySize) {
-    const dx = Math.abs(contentOverlaySize.width  - dpiOverlaySize.width)  / dpiOverlaySize.width;
-    const dy = Math.abs(contentOverlaySize.height - dpiOverlaySize.height) / dpiOverlaySize.height;
-    const TOL = 0.01;          // 1% — within rounding noise
-    const UNIFORM_TOL = 0.01;  // |dx − dy| under this means a multiplicative scale, not chrome-trim
-    const CHROME_TRIM = 0.02;  // single-axis divergence above this is taskbar/title-bar trim
-    if (dx < TOL && dy < TOL) {
+    // Validate dpiOverlaySize against the display's reported CSS size.
+    // The "screenshot ÷ scaleFactor" formula is only meaningful when the
+    // capture comes back at native physical resolution. When Electron's
+    // capturer returns a downscaled thumbnail (e.g. 1920×1080 capture on
+    // a 2560×1440 1.5× display, where screenshot ÷ 1.5 = 1280×720 ≠
+    // primary.size 1707×960), the formula is invalid and the chrome-trim
+    // branch below misclassifies the mismatch. In that case the actual
+    // damage-window content size IS the projection target.
+    const primarySize = primary.size || { width: 1, height: 1 };
+    const dpiMatchesDisplay =
+      Math.abs(dpiOverlaySize.width  - primarySize.width)  / Math.max(1, primarySize.width)  < 0.02 &&
+      Math.abs(dpiOverlaySize.height - primarySize.height) / Math.max(1, primarySize.height) < 0.02;
+
+    if (!dpiMatchesDisplay) {
       overlaySize = contentOverlaySize;
-      overlayBasis = 'content-equal';
-    } else if (Math.abs(dx - dy) < UNIFORM_TOL) {
-      // Both axes uniformly off → content size is right, dpi-derived is wrong.
-      overlaySize = contentOverlaySize;
-      overlayBasis = 'content-uniform';
-    } else if (Math.max(dx, dy) > CHROME_TRIM) {
-      overlaySize = dpiOverlaySize;
-      overlayBasis = 'dpi-chrome-trim';
+      overlayBasis = 'content-thumbnail-mismatch';
     } else {
-      overlaySize = dpiOverlaySize;
-      overlayBasis = 'dpi';
+      const dx = Math.abs(contentOverlaySize.width  - dpiOverlaySize.width)  / dpiOverlaySize.width;
+      const dy = Math.abs(contentOverlaySize.height - dpiOverlaySize.height) / dpiOverlaySize.height;
+      const TOL = 0.01;          // 1% — within rounding noise
+      const UNIFORM_TOL = 0.01;  // |dx − dy| under this means a multiplicative scale, not chrome-trim
+      const CHROME_TRIM = 0.02;  // single-axis divergence above this is taskbar/title-bar trim
+      if (dx < TOL && dy < TOL) {
+        overlaySize = contentOverlaySize;
+        overlayBasis = 'content-equal';
+      } else if (Math.abs(dx - dy) < UNIFORM_TOL) {
+        // Both axes uniformly off → content size is right, dpi-derived is wrong.
+        overlaySize = contentOverlaySize;
+        overlayBasis = 'content-uniform';
+      } else if (Math.max(dx, dy) > CHROME_TRIM) {
+        overlaySize = dpiOverlaySize;
+        overlayBasis = 'dpi-chrome-trim';
+      } else {
+        overlaySize = dpiOverlaySize;
+        overlayBasis = 'dpi';
+      }
     }
   }
 

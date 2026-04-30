@@ -41,6 +41,49 @@ x64:
     - '!todo'
     - '!dist{,/**}'
     - '!.github{,/**}'
+arm64:
+  firstOrDefaultFilePatterns:
+    - '**/*'
+    - '!**/node_modules'
+    - '!build{,/**/*}'
+    - '!dist{,/**/*}'
+    - '!card detector{,/**}'
+    - '!vendor/yisim-master{,/**}'
+    - '!images{,/**}'
+    - '!data{,/**}'
+    - '!debug{,/**}'
+    - '!overlay_settings.json'
+    - '!ConvertedHandCard.json'
+    - '!ConvertedCardOperationLog.json'
+    - '!game_screenshot.png'
+    - '!startup.log'
+    - '!todo'
+    - '!dist{,/**}'
+    - '!.github{,/**}'
+    - package.json
+    - '!**/*.{iml,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,suo,xproj,cc,d.ts,mk,a,o,forge-meta,pdb}'
+    - '!**/._*'
+    - '!**/electron-builder.{yaml,yml,json,json5,toml,ts}'
+    - '!**/{.git,.hg,.svn,CVS,RCS,SCCS,__pycache__,.DS_Store,thumbs.db,.gitignore,.gitkeep,.gitattributes,.npmignore,.idea,.vs,.flowconfig,.jshintrc,.eslintrc,.circleci,.yarn-integrity,.yarn-metadata.json,yarn-error.log,yarn.lock,package-lock.json,npm-debug.log,appveyor.yml,.travis.yml,circle.yml,.nyc_output,.husky,.github,electron-builder.env}'
+    - '!.yarn{,/**/*}'
+    - '!.editorconfig'
+    - '!.yarnrc.yml'
+  nodeModuleFilePatterns:
+    - '**/*'
+    - '**/*'
+    - '!card detector{,/**}'
+    - '!vendor/yisim-master{,/**}'
+    - '!images{,/**}'
+    - '!data{,/**}'
+    - '!debug{,/**}'
+    - '!overlay_settings.json'
+    - '!ConvertedHandCard.json'
+    - '!ConvertedCardOperationLog.json'
+    - '!game_screenshot.png'
+    - '!startup.log'
+    - '!todo'
+    - '!dist{,/**}'
+    - '!.github{,/**}'
 nsis:
   script: |-
     !include "/Users/raymondwang/Desktop/yixian card counter/yixian-card-counter-overlay/yixian-card-counter-damage-calculator/node_modules/app-builder-lib/templates/nsis/include/StdUtils.nsh"
@@ -116,7 +159,7 @@ nsis:
       !insertmacro MUI_LANGUAGE "Vietnamese"
     !macroend
 
-    !include "/private/var/folders/_t/r2yjny0n1vb_3129jp6s5bbh0000gn/T/t-yc7JEG/0-messages.nsh"
+    !include "/private/var/folders/_t/r2yjny0n1vb_3129jp6s5bbh0000gn/T/t-Tq1lPm/0-messages.nsh"
     !addplugindir /x86-unicode "/Users/raymondwang/Library/Caches/electron-builder/nsis/nsis-resources-3.4.1/plugins/x86-unicode"
 
     Var newStartMenuLink

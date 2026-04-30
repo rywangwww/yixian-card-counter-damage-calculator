@@ -49,6 +49,22 @@ const STRIP_CANONICAL_H = 192;
 const NCC_THRESHOLD = 0.55;
 const NCC_MARGIN    = 0.05;
 
+// Level disambiguator. After the family is identified, sibling level templates
+// (same baseName, same class, same character) are re-scored over the bottom
+// 20% of the canonical strip, split into 4 sub-bands of 5% each, taking the
+// MIN ZNCC. Rationale: the level decoration sits in a narrow band somewhere
+// in the bottom of the strip; whole-slice NCC averages that disagreement with
+// surrounding agreement and ties levels for art like 金灵•针. Empirically the
+// min-sub-band approach drops worst-case within-family NCC from 0.65 → -0.00
+// across 1093 pairs and breaks the 金灵•针 tie (margin 0.003 → 0.257). See
+// debug/name_strip_detection_check/test_weighted_ncc.js for the full study.
+//
+// If no sibling beats the original by DISAMBIG_MARGIN, keep whatever the
+// family-NCC step picked — disambiguator is conservative.
+const DISAMBIG_BOTTOM_FRACTION = 0.20;
+const DISAMBIG_SUB_BANDS       = 4;
+const DISAMBIG_MARGIN          = 0.05;
+
 // The NCC peak is 1-2px wide in both x and y. Calibration rounding can put the
 // strip 1-2px off in either axis, dropping NCC from ~0.75 to ~0.48. Search a
 // small neighbourhood and take the best score.
@@ -234,6 +250,73 @@ function extractScreenStripCrop(srcGray, srcW, srcH, slotRect, rect) {
     }
   }
   return { gray: crop, w: aw, h: ah };
+}
+
+// ── Level disambiguator ─────────────────────────────────────────────────────
+
+// Min ZNCC across DISAMBIG_SUB_BANDS horizontal sub-bands inside the bottom
+// DISAMBIG_BOTTOM_FRACTION of a (w × h) canonical strip. Both inputs must be
+// the same dimensions; leftover rows fold into the last band.
+function bottomMinSubBandZncc(slotGray, tmplGray, w, h) {
+  const bottomH = Math.max(1, Math.round(h * DISAMBIG_BOTTOM_FRACTION));
+  const startRow = h - bottomH;
+  const subH = Math.max(1, Math.floor(bottomH / DISAMBIG_SUB_BANDS));
+  let minScore = +Infinity;
+  for (let band = 0; band < DISAMBIG_SUB_BANDS; band += 1) {
+    const yStart = startRow + band * subH;
+    const yEnd   = (band === DISAMBIG_SUB_BANDS - 1) ? (startRow + bottomH) : (yStart + subH);
+    const bandRows = yEnd - yStart;
+    if (bandRows <= 0) continue;
+    const offset = yStart * w;
+    const len    = bandRows * w;
+    const slotSub = slotGray.subarray(offset, offset + len);
+    const tmplSub = tmplGray.subarray(offset, offset + len);
+    const score = zncc(slotSub, tmplSub, len);
+    if (score < minScore) minScore = score;
+  }
+  return Number.isFinite(minScore) ? minScore : -Infinity;
+}
+
+// Re-pick which level template wins for an already-identified family. Sibling
+// templates share baseName + class + character (so they're alternate levels
+// of the same card art); they get scored over the bottom-20% min-sub-band
+// region. If the top sibling beats the second by DISAMBIG_MARGIN, return it;
+// otherwise return the original best (conservative — never harms accuracy).
+function disambiguateLevel(best, scored, srcGrayData) {
+  if (!best || best.isDream) return best;
+
+  const sameFamily = (c) =>
+    c.baseName === best.baseName &&
+    !!c.isPersonal === !!best.isPersonal &&
+    (best.isPersonal ? c.personalCharacter === best.personalCharacter : true) &&
+    !c.isDream;
+
+  const siblings = scored.filter(sameFamily);
+  if (siblings.length < 2) return best;
+
+  const stripRect = stripRectForTemplate(best);
+  const { gray: srcGray, width: srcW, height: srcH } = srcGrayData;
+
+  const scoresByTemplate = [];
+  for (const t of siblings) {
+    const canon = stripCache.get(t.filePath);
+    if (!canon) continue;
+    const dx = t.bestDx | 0;
+    const dy = t.bestDy | 0;
+    const searchRect = (dx === 0 && dy === 0)
+      ? t.slotRect
+      : { ...t.slotRect, x: t.slotRect.x + dx, y: t.slotRect.y + dy };
+    const crop = extractScreenStripCrop(srcGray, srcW, srcH, searchRect, stripRect);
+    if (!crop) continue;
+    const screenResized = resizeGray(crop.gray, crop.w, crop.h, canon.w, canon.h);
+    const score = bottomMinSubBandZncc(screenResized, canon.gray, canon.w, canon.h);
+    if (Number.isFinite(score)) scoresByTemplate.push({ tmpl: t, score });
+  }
+
+  if (scoresByTemplate.length < 2) return best;
+  scoresByTemplate.sort((a, b) => b.score - a.score);
+  const margin = scoresByTemplate[0].score - scoresByTemplate[1].score;
+  return margin >= DISAMBIG_MARGIN ? scoresByTemplate[0].tmpl : best;
 }
 
 // ── Strip cache ───────────────────────────────────────────────────────────────
@@ -443,6 +526,7 @@ function detectSlotsNameStrip(sourceImage, handCardNames, imagesDir) {
       // rounding can put the strip 1-2px off in either direction (more at
       // higher capture resolutions — see xSearchRange/ySearchRange above).
       let nccScore = -Infinity;
+      let bestDx = 0, bestDy = 0;
       for (let dy = -ySearchRange; dy <= ySearchRange; dy += 1) {
         for (let dx = -xSearchRange; dx <= xSearchRange; dx += 1) {
           const searchRect = (dy === 0 && dx === 0)
@@ -452,17 +536,21 @@ function detectSlotsNameStrip(sourceImage, handCardNames, imagesDir) {
           if (!crop) continue;
           const screenResized = resizeGray(crop.gray, crop.w, crop.h, canon.w, canon.h);
           const score = zncc(screenResized, canon.gray, canon.w * canon.h);
-          if (score > nccScore) nccScore = score;
+          if (score > nccScore) { nccScore = score; bestDx = dx; bestDy = dy; }
         }
       }
       if (nccScore === -Infinity) continue;
       // metrics.ncc is read by slot_detector.resolveDreamPhase when it logs
       // each phase candidate's familyScore; including it here keeps the debug
       // payload consistent with the old detector's shape.
+      // bestDx/bestDy are reused by disambiguateLevel so it doesn't have to
+      // re-search for each sibling template.
       scored.push({
         ...tmpl,
         ncc: nccScore,
         slotRect: cardRect,
+        bestDx,
+        bestDy,
         metrics: { ncc: nccScore },
       });
     }
@@ -489,8 +577,14 @@ function detectSlotsNameStrip(sourceImage, handCardNames, imagesDir) {
     const dreamPhaseResult = (accepted && best.isDream && srcRgbData)
       ? resolveDreamPhase(best, scored, srcGrayData, srcRgbData, baselineMasksCache, 'ncc')
       : null;
-    const resolvedTemplate = dreamPhaseResult?.template || best;
-    const resolvedPhase    = dreamPhaseResult?.phase ?? (best.isDream ? null : null);
+    let resolvedTemplate = dreamPhaseResult?.template || best;
+    const resolvedPhase  = dreamPhaseResult?.phase ?? (best.isDream ? null : null);
+
+    // Bottom-20% min-sub-band level disambiguator. Runs after the family is
+    // identified; only for non-dream cards (dream uses phase, not level).
+    if (accepted && !best.isDream) {
+      resolvedTemplate = disambiguateLevel(resolvedTemplate, scored, srcGrayData);
+    }
 
     // Personal rect for the debug overlay: prefer winning character, then any personal candidate.
     let personalSlotRect = null;

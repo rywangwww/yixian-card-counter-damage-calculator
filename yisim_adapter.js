@@ -601,6 +601,16 @@ async function simulateFirstEightTurns(slots, options = {}) {
     lastSimulationResult = result;
     return result;
   } catch (error) {
+    // Log which slot(s) the simulator couldn't map. This is the symptom the
+    // user sees as a green damage badge with "--": detection succeeded but
+    // the swogi-id lookup or roll bailed. Harvest these messages to patch
+    // missing entries in the swogi data / fuzzy-name table.
+    console.warn('[damage] simulation failed:', {
+      slots: normalizedSlots.map((s) => s ? {
+        name: s.name, level: s.level, isDream: s.isDream, isPersonal: s.isPersonal,
+      } : null),
+      error: error.message,
+    });
     const failedResult = buildEmptyResult(error.message);
     lastSimulationKey = cacheKey;
     lastSimulationResult = failedResult;
