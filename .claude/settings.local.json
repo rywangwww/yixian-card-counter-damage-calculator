@@ -52,7 +52,12 @@
       "Bash(node debug/dream_card_phase_differentiation/inspect_phase_differences.js)",
       "Bash(node debug/dream_card_phase_differentiation/inspect_phase_differences.js debug/name_strip_detection_check/check1.png 梦•混元碎击 0 '__TRACKED_VAR__/Library/Application Support/yixian-overlay/calibration.json')",
       "Bash(ELECTRON_RUN_AS_NODE= node_modules/electron/dist/Electron.app/Contents/MacOS/Electron debug/name_strip_detection_check/test_phase_resolution.js)",
-      "Bash(npx --no-install electron-builder --win nsis zip --x64 --publish never)"
+      "Bash(npx --no-install electron-builder --win nsis zip --x64 --publish never)",
+      "Bash(node debug/dream_card_phase_differentiation/inspect_phase_differences.js fengxuround7.png \"梦•星轨推衍\" 3)",
+      "Bash(node debug/dream_card_phase_differentiation/inspect_phase_differences.js fengxuround6.png \"梦•轰雷掣电\" 6)",
+      "Bash(node debug/dream_card_phase_differentiation/dump_crops.js)",
+      "Bash(node debug/dream_card_phase_differentiation/dump_top_strip_crops.js)",
+      "Bash(node debug/dream_card_phase_differentiation/test_top_strip_masked.js)"
     ]
   }
 }

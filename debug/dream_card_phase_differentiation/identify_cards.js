@@ -22,6 +22,7 @@ const CAL_PATH   = path.join(__dirname, 'calibration.json');
 const IMAGES_DIR = path.join(ROOT, 'images');
 const SHOTS = [
   path.join(__dirname, 'fengxuround6.png'),
+  path.join(__dirname, 'fengxuround7.png'),
   path.join(__dirname, 'fengxuround15.png'),
 ];
 

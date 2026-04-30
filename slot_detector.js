@@ -408,9 +408,24 @@ const DREAM_PHASE_AMBIGUOUS_RELATIVE_MARGIN = 0.035;
 // Rank-combined with the existing pixel-mask phaseScore (chromatic 0.8 +
 // mask 0.2) so the chromatic decision dominates but the mask still breaks
 // ties when colour casts are close.
+// Top 20% of the dream name strip. Strip rect is x∈[0.0608, 0.20], y∈[0, 0.6]
+// of the card; this region is the upper third of that strip. Combined with
+// the dream alpha baseline mask (applied to BOTH templates and the
+// screenshot crop), this region gives the cleanest phase-tint signal we've
+// found:
+//   - The strip background carries the per-phase color tint (red-shift for
+//     low phases, blue-shift for high phases on the heptastar set).
+//   - Restricting to the top 20% drops body-text pixels (which were warping
+//     the average toward "more red ink = different chromaticity").
+//   - The alpha mask drops the screenshot's UI background pixels that the
+//     slot rect captures around the card — without this, the (blue) game
+//     background skewed every crop's chromaticity toward blue, biasing the
+//     winner toward P3 (which is the bluest template) regardless of truth.
+// Empirically validated 9/9 against the full ground-truth suite (5 round-15
+// P5 cards, 2 round-7 P3 cards, 2 P2 cards that the earlier metrics missed,
+// and 梦•混元碎击 P1 regression).
 const DREAM_PHASE_CHROMATIC_REGIONS = [
-  { x: 0.00, y: 0.00, width: 0.10, height: 1.00 }, // left edge (vertical name strip)
-  { x: 0.00, y: 0.90, width: 1.00, height: 0.10 }  // bottom border
+  { x: 0.0608, y: 0.00, width: 0.1392, height: 0.12 }
 ];
 const DREAM_PHASE_CHROMATIC_RANK_WEIGHT = 0.8;
 const DREAM_PHASE_MASK_RANK_WEIGHT      = 0.2;
@@ -693,8 +708,19 @@ function resolveDreamPhase(best, scored, srcGrayData, srcRgbData, baselineMasks,
 
   // Crop's chromatic profile — average RGB over the same regions we
   // pre-computed for each phase template. Alignment-invariant.
+  //
+  // Apply the dream alpha baseline mask to the crop's averaging so that
+  // background pixels (the screenshot UI behind/around the card) don't
+  // pollute the average. Templates already get this mask via
+  // getTemplateRawData → data.mask; without applying it on the crop side
+  // too, the chromaticity comparison was biased by the game's blue UI
+  // background — see debug/dream_card_phase_differentiation/.
+  const dreamBaseline = baselineMasks?.dream;
+  const cropMask = dreamBaseline
+    ? resizeMaskNN(dreamBaseline.mask, dreamBaseline.width, dreamBaseline.height, width, height)
+    : null;
   const cropChromatic = DREAM_PHASE_CHROMATIC_REGIONS.map((region) =>
-    computeRegionAverageRgb(cropRgb, null, width, height, region)
+    computeRegionAverageRgb(cropRgb, cropMask, width, height, region)
   );
 
   const phaseScored = phaseTemplates.map((candidate) => {
