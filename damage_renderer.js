@@ -53,6 +53,7 @@ function renderDamageOverlay() {
     if (!rect) continue;
 
     const detected = !!boardState.capture?.slotResults?.[index]?.accepted;
+    const hasDamage = cumulativeDamage[index] != null;
     const badge = document.createElement('div');
     badge.className = 'damage-badge';
 
@@ -61,8 +62,13 @@ function renderDamageOverlay() {
     turnLabel.textContent = `T${index + 1}`;
 
     const damageValue = document.createElement('span');
-    damageValue.className = `damage-badge-value${detected ? ' detected' : ''}`;
-    damageValue.textContent = cumulativeDamage[index] == null ? '--' : `${cumulativeDamage[index]}`;
+    // Green badge requires BOTH detection success AND a damage number. The
+    // simulation can fail (e.g. swogi-map miss for a detected card+level)
+    // even when the detector flagged the slot accepted; without this guard
+    // the user sees a green badge with "--", which falsely implies the
+    // calculator is working when it actually bailed out.
+    damageValue.className = `damage-badge-value${detected && hasDamage ? ' detected' : ''}`;
+    damageValue.textContent = hasDamage ? `${cumulativeDamage[index]}` : '--';
 
     badge.appendChild(turnLabel);
     badge.appendChild(damageValue);

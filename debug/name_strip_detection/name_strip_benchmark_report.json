@@ -1,0 +1,1294 @@
+{
+  "generatedAt": "2026-04-27T20:15:36.761Z",
+  "seed": 20260427,
+  "bucketSize": 10,
+  "configPath": "name_strip_config.json",
+  "datasetPath": "calibration_dataset.json",
+  "reviewedRects": {
+    "sect": {
+      "x": 0.0988,
+      "y": 0,
+      "width": 0.1412,
+      "height": 0.6
+    },
+    "dream": {
+      "x": 0.0608,
+      "y": 0,
+      "width": 0.1392,
+      "height": 0.6
+    },
+    "personal": {
+      "x": 0.109,
+      "y": 0,
+      "width": 0.1398,
+      "height": 0.6
+    }
+  },
+  "decisionSummary": {
+    "labeledPairCount": 40,
+    "nccThreshold": {
+      "threshold": 0.774798,
+      "accuracy": 0.975,
+      "precision": 1,
+      "recall": 0.9,
+      "f1": 0.947368,
+      "confusion": {
+        "tp": 9,
+        "tn": 30,
+        "fp": 0,
+        "fn": 1
+      }
+    },
+    "grayMseThreshold": {
+      "threshold": 2149.931148,
+      "accuracy": 0.975,
+      "precision": 1,
+      "recall": 0.9,
+      "f1": 0.947368,
+      "confusion": {
+        "tp": 9,
+        "tn": 30,
+        "fp": 0,
+        "fn": 1
+      }
+    },
+    "recommendation": "strong-fallback-or-reranker-candidate"
+  },
+  "bucketResults": [
+    {
+      "name": "sect_same_pool_different_family",
+      "expectedMatch": false,
+      "availablePairCount": 54,
+      "sampledPairCount": 10,
+      "summary": {
+        "count": 10,
+        "actualMatchCount": 0,
+        "actualNonMatchCount": 10,
+        "nccMean": 0.309158,
+        "nccMedian": 0.280245,
+        "grayMseMean": 6743.866573,
+        "grayMseMedian": 6608.265345
+      },
+      "pairs": [
+        {
+          "bucket": "sect_same_pool_different_family",
+          "pairIndex": 1,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-03",
+            "className": "sect",
+            "family": "云剑•厚土",
+            "relPath": "images/sect/cloud-spirit/1/云剑•厚土3.png"
+          },
+          "cardB": {
+            "id": "sample-04",
+            "className": "sect",
+            "family": "五行刺",
+            "relPath": "images/sect/five-element/1/五行刺1.png"
+          },
+          "metrics": {
+            "ncc": 0.160714,
+            "grayMse": 7878.374819,
+            "pixelCount": 8190
+          }
+        },
+        {
+          "bucket": "sect_same_pool_different_family",
+          "pairIndex": 2,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-01",
+            "className": "sect",
+            "family": "云剑•厚土",
+            "relPath": "images/sect/cloud-spirit/1/云剑•厚土1.png"
+          },
+          "cardB": {
+            "id": "sample-06",
+            "className": "sect",
+            "family": "五行刺",
+            "relPath": "images/sect/five-element/1/五行刺3.png"
+          },
+          "metrics": {
+            "ncc": 0.198635,
+            "grayMse": 7654.428466,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_same_pool_different_family",
+          "pairIndex": 3,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-05",
+            "className": "sect",
+            "family": "五行刺",
+            "relPath": "images/sect/five-element/1/五行刺2.png"
+          },
+          "cardB": {
+            "id": "sample-10",
+            "className": "sect",
+            "family": "劈山掌",
+            "relPath": "images/sect/duan-xuan/1/劈山掌1.png"
+          },
+          "metrics": {
+            "ncc": 0.442891,
+            "grayMse": 6015.62332,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_same_pool_different_family",
+          "pairIndex": 4,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-06",
+            "className": "sect",
+            "family": "五行刺",
+            "relPath": "images/sect/five-element/1/五行刺3.png"
+          },
+          "cardB": {
+            "id": "sample-07",
+            "className": "sect",
+            "family": "两仪阵",
+            "relPath": "images/sect/heptastar/3/两仪阵1.png"
+          },
+          "metrics": {
+            "ncc": 0.280758,
+            "grayMse": 6521.296248,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_same_pool_different_family",
+          "pairIndex": 5,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-02",
+            "className": "sect",
+            "family": "云剑•厚土",
+            "relPath": "images/sect/cloud-spirit/1/云剑•厚土2.png"
+          },
+          "cardB": {
+            "id": "sample-09",
+            "className": "sect",
+            "family": "两仪阵",
+            "relPath": "images/sect/heptastar/3/两仪阵3.png"
+          },
+          "metrics": {
+            "ncc": 0.217136,
+            "grayMse": 7282.316528,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_same_pool_different_family",
+          "pairIndex": 6,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-06",
+            "className": "sect",
+            "family": "五行刺",
+            "relPath": "images/sect/five-element/1/五行刺3.png"
+          },
+          "cardB": {
+            "id": "sample-08",
+            "className": "sect",
+            "family": "两仪阵",
+            "relPath": "images/sect/heptastar/3/两仪阵2.png"
+          },
+          "metrics": {
+            "ncc": 0.279732,
+            "grayMse": 6193.275049,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_same_pool_different_family",
+          "pairIndex": 7,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-02",
+            "className": "sect",
+            "family": "云剑•厚土",
+            "relPath": "images/sect/cloud-spirit/1/云剑•厚土2.png"
+          },
+          "cardB": {
+            "id": "sample-04",
+            "className": "sect",
+            "family": "五行刺",
+            "relPath": "images/sect/five-element/1/五行刺1.png"
+          },
+          "metrics": {
+            "ncc": 0.364396,
+            "grayMse": 6695.234442,
+            "pixelCount": 8190
+          }
+        },
+        {
+          "bucket": "sect_same_pool_different_family",
+          "pairIndex": 8,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-01",
+            "className": "sect",
+            "family": "云剑•厚土",
+            "relPath": "images/sect/cloud-spirit/1/云剑•厚土1.png"
+          },
+          "cardB": {
+            "id": "sample-08",
+            "className": "sect",
+            "family": "两仪阵",
+            "relPath": "images/sect/heptastar/3/两仪阵2.png"
+          },
+          "metrics": {
+            "ncc": 0.441511,
+            "grayMse": 6245.589892,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_same_pool_different_family",
+          "pairIndex": 9,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-07",
+            "className": "sect",
+            "family": "两仪阵",
+            "relPath": "images/sect/heptastar/3/两仪阵1.png"
+          },
+          "cardB": {
+            "id": "sample-12",
+            "className": "sect",
+            "family": "劈山掌",
+            "relPath": "images/sect/duan-xuan/1/劈山掌3.png"
+          },
+          "metrics": {
+            "ncc": 0.241664,
+            "grayMse": 7370.76795,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_same_pool_different_family",
+          "pairIndex": 10,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-05",
+            "className": "sect",
+            "family": "五行刺",
+            "relPath": "images/sect/five-element/1/五行刺2.png"
+          },
+          "cardB": {
+            "id": "sample-11",
+            "className": "sect",
+            "family": "劈山掌",
+            "relPath": "images/sect/duan-xuan/1/劈山掌2.png"
+          },
+          "metrics": {
+            "ncc": 0.46414,
+            "grayMse": 5581.759015,
+            "pixelCount": 8640
+          }
+        }
+      ]
+    },
+    {
+      "name": "same_card_different_level",
+      "expectedMatch": true,
+      "availablePairCount": 36,
+      "sampledPairCount": 10,
+      "summary": {
+        "count": 10,
+        "actualMatchCount": 10,
+        "actualNonMatchCount": 0,
+        "nccMean": 0.862854,
+        "nccMedian": 0.959718,
+        "grayMseMean": 1437.53374,
+        "grayMseMedian": 436.415384
+      },
+      "pairs": [
+        {
+          "bucket": "same_card_different_level",
+          "pairIndex": 1,
+          "expectedMatch": true,
+          "actualMatch": true,
+          "cardA": {
+            "id": "sample-04",
+            "className": "sect",
+            "family": "五行刺",
+            "relPath": "images/sect/five-element/1/五行刺1.png"
+          },
+          "cardB": {
+            "id": "sample-06",
+            "className": "sect",
+            "family": "五行刺",
+            "relPath": "images/sect/five-element/1/五行刺3.png"
+          },
+          "metrics": {
+            "ncc": 0.774798,
+            "grayMse": 2149.931148,
+            "pixelCount": 8190
+          }
+        },
+        {
+          "bucket": "same_card_different_level",
+          "pairIndex": 2,
+          "expectedMatch": true,
+          "actualMatch": true,
+          "cardA": {
+            "id": "sample-07",
+            "className": "sect",
+            "family": "两仪阵",
+            "relPath": "images/sect/heptastar/3/两仪阵1.png"
+          },
+          "cardB": {
+            "id": "sample-08",
+            "className": "sect",
+            "family": "两仪阵",
+            "relPath": "images/sect/heptastar/3/两仪阵2.png"
+          },
+          "metrics": {
+            "ncc": 0.955544,
+            "grayMse": 475.775869,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "same_card_different_level",
+          "pairIndex": 3,
+          "expectedMatch": true,
+          "actualMatch": true,
+          "cardA": {
+            "id": "sample-31",
+            "className": "personal",
+            "family": "木灵•桃花印",
+            "relPath": "images/personal/HuaQinrui/木灵•桃花印1.png"
+          },
+          "cardB": {
+            "id": "sample-33",
+            "className": "personal",
+            "family": "木灵•桃花印",
+            "relPath": "images/personal/HuaQinrui/木灵•桃花印3.png"
+          },
+          "metrics": {
+            "ncc": 0.852712,
+            "grayMse": 1943.190831,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "same_card_different_level",
+          "pairIndex": 4,
+          "expectedMatch": true,
+          "actualMatch": true,
+          "cardA": {
+            "id": "sample-17",
+            "className": "dream",
+            "family": "梦•五行刺",
+            "relPath": "images/seasonal/five-element/梦•五行刺2.png"
+          },
+          "cardB": {
+            "id": "sample-18",
+            "className": "dream",
+            "family": "梦•五行刺",
+            "relPath": "images/seasonal/five-element/梦•五行刺3.png"
+          },
+          "metrics": {
+            "ncc": 0.998061,
+            "grayMse": 26.750437,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "same_card_different_level",
+          "pairIndex": 5,
+          "expectedMatch": true,
+          "actualMatch": true,
+          "cardA": {
+            "id": "sample-25",
+            "className": "personal",
+            "family": "阴符玉简",
+            "relPath": "images/personal/FengXu/阴符玉简1.png"
+          },
+          "cardB": {
+            "id": "sample-26",
+            "className": "personal",
+            "family": "阴符玉简",
+            "relPath": "images/personal/FengXu/阴符玉简2.png"
+          },
+          "metrics": {
+            "ncc": 0.133893,
+            "grayMse": 8838.804259,
+            "pixelCount": 7517
+          }
+        },
+        {
+          "bucket": "same_card_different_level",
+          "pairIndex": 6,
+          "expectedMatch": true,
+          "actualMatch": true,
+          "cardA": {
+            "id": "sample-04",
+            "className": "sect",
+            "family": "五行刺",
+            "relPath": "images/sect/five-element/1/五行刺1.png"
+          },
+          "cardB": {
+            "id": "sample-05",
+            "className": "sect",
+            "family": "五行刺",
+            "relPath": "images/sect/five-element/1/五行刺2.png"
+          },
+          "metrics": {
+            "ncc": 0.954264,
+            "grayMse": 460.16297,
+            "pixelCount": 8190
+          }
+        },
+        {
+          "bucket": "same_card_different_level",
+          "pairIndex": 7,
+          "expectedMatch": true,
+          "actualMatch": true,
+          "cardA": {
+            "id": "sample-16",
+            "className": "dream",
+            "family": "梦•五行刺",
+            "relPath": "images/seasonal/five-element/梦•五行刺1.png"
+          },
+          "cardB": {
+            "id": "sample-17",
+            "className": "dream",
+            "family": "梦•五行刺",
+            "relPath": "images/seasonal/five-element/梦•五行刺2.png"
+          },
+          "metrics": {
+            "ncc": 0.998033,
+            "grayMse": 27.815214,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "same_card_different_level",
+          "pairIndex": 8,
+          "expectedMatch": true,
+          "actualMatch": true,
+          "cardA": {
+            "id": "sample-13",
+            "className": "dream",
+            "family": "梦•云剑厚土",
+            "relPath": "images/seasonal/cloud-spirit/梦•云剑厚土1.png"
+          },
+          "cardB": {
+            "id": "sample-14",
+            "className": "dream",
+            "family": "梦•云剑厚土",
+            "relPath": "images/seasonal/cloud-spirit/梦•云剑厚土2.png"
+          },
+          "metrics": {
+            "ncc": 0.998478,
+            "grayMse": 22.16397,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "same_card_different_level",
+          "pairIndex": 9,
+          "expectedMatch": true,
+          "actualMatch": true,
+          "cardA": {
+            "id": "sample-22",
+            "className": "dream",
+            "family": "梦•劈山掌",
+            "relPath": "images/seasonal/duan-xuan/梦•劈山掌1.png"
+          },
+          "cardB": {
+            "id": "sample-23",
+            "className": "dream",
+            "family": "梦•劈山掌",
+            "relPath": "images/seasonal/duan-xuan/梦•劈山掌2.png"
+          },
+          "metrics": {
+            "ncc": 0.998866,
+            "grayMse": 18.074906,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "same_card_different_level",
+          "pairIndex": 10,
+          "expectedMatch": true,
+          "actualMatch": true,
+          "cardA": {
+            "id": "sample-10",
+            "className": "sect",
+            "family": "劈山掌",
+            "relPath": "images/sect/duan-xuan/1/劈山掌1.png"
+          },
+          "cardB": {
+            "id": "sample-11",
+            "className": "sect",
+            "family": "劈山掌",
+            "relPath": "images/sect/duan-xuan/1/劈山掌2.png"
+          },
+          "metrics": {
+            "ncc": 0.963893,
+            "grayMse": 412.667799,
+            "pixelCount": 8640
+          }
+        }
+      ]
+    },
+    {
+      "name": "truly_random",
+      "expectedMatch": null,
+      "availablePairCount": 630,
+      "sampledPairCount": 10,
+      "summary": {
+        "count": 10,
+        "actualMatchCount": 2,
+        "actualNonMatchCount": 8,
+        "nccMean": 0.282994,
+        "nccMedian": 0.128683,
+        "grayMseMean": 7640.24535,
+        "grayMseMedian": 8564.790902
+      },
+      "pairs": [
+        {
+          "bucket": "truly_random",
+          "pairIndex": 1,
+          "expectedMatch": null,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-26",
+            "className": "personal",
+            "family": "阴符玉简",
+            "relPath": "images/personal/FengXu/阴符玉简2.png"
+          },
+          "cardB": {
+            "id": "sample-36",
+            "className": "personal",
+            "family": "双节棍",
+            "relPath": "images/personal/LiMan/双节棍3.png"
+          },
+          "metrics": {
+            "ncc": -0.010405,
+            "grayMse": 8835.504999,
+            "pixelCount": 7517
+          }
+        },
+        {
+          "bucket": "truly_random",
+          "pairIndex": 2,
+          "expectedMatch": null,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-16",
+            "className": "dream",
+            "family": "梦•五行刺",
+            "relPath": "images/seasonal/five-element/梦•五行刺1.png"
+          },
+          "cardB": {
+            "id": "sample-31",
+            "className": "personal",
+            "family": "木灵•桃花印",
+            "relPath": "images/personal/HuaQinrui/木灵•桃花印1.png"
+          },
+          "metrics": {
+            "ncc": 0.076053,
+            "grayMse": 11971.583926,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "truly_random",
+          "pairIndex": 3,
+          "expectedMatch": null,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-07",
+            "className": "sect",
+            "family": "两仪阵",
+            "relPath": "images/sect/heptastar/3/两仪阵1.png"
+          },
+          "cardB": {
+            "id": "sample-29",
+            "className": "personal",
+            "family": "孤虚金书",
+            "relPath": "images/personal/FengXu/孤虚金书2.png"
+          },
+          "metrics": {
+            "ncc": 0.209931,
+            "grayMse": 9050.058579,
+            "pixelCount": 7513
+          }
+        },
+        {
+          "bucket": "truly_random",
+          "pairIndex": 4,
+          "expectedMatch": null,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-06",
+            "className": "sect",
+            "family": "五行刺",
+            "relPath": "images/sect/five-element/1/五行刺3.png"
+          },
+          "cardB": {
+            "id": "sample-26",
+            "className": "personal",
+            "family": "阴符玉简",
+            "relPath": "images/personal/FengXu/阴符玉简2.png"
+          },
+          "metrics": {
+            "ncc": 0.017845,
+            "grayMse": 8294.076804,
+            "pixelCount": 7517
+          }
+        },
+        {
+          "bucket": "truly_random",
+          "pairIndex": 5,
+          "expectedMatch": null,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-08",
+            "className": "sect",
+            "family": "两仪阵",
+            "relPath": "images/sect/heptastar/3/两仪阵2.png"
+          },
+          "cardB": {
+            "id": "sample-20",
+            "className": "dream",
+            "family": "梦•两仪阵",
+            "relPath": "images/seasonal/heptastar/梦•两仪阵2.png"
+          },
+          "metrics": {
+            "ncc": 0.090855,
+            "grayMse": 10500.405476,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "truly_random",
+          "pairIndex": 6,
+          "expectedMatch": null,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-03",
+            "className": "sect",
+            "family": "云剑•厚土",
+            "relPath": "images/sect/cloud-spirit/1/云剑•厚土3.png"
+          },
+          "cardB": {
+            "id": "sample-33",
+            "className": "personal",
+            "family": "木灵•桃花印",
+            "relPath": "images/personal/HuaQinrui/木灵•桃花印3.png"
+          },
+          "metrics": {
+            "ncc": 0.162066,
+            "grayMse": 7552.225169,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "truly_random",
+          "pairIndex": 7,
+          "expectedMatch": null,
+          "actualMatch": true,
+          "cardA": {
+            "id": "sample-01",
+            "className": "sect",
+            "family": "云剑•厚土",
+            "relPath": "images/sect/cloud-spirit/1/云剑•厚土1.png"
+          },
+          "cardB": {
+            "id": "sample-02",
+            "className": "sect",
+            "family": "云剑•厚土",
+            "relPath": "images/sect/cloud-spirit/1/云剑•厚土2.png"
+          },
+          "metrics": {
+            "ncc": 0.964089,
+            "grayMse": 430.128832,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "truly_random",
+          "pairIndex": 8,
+          "expectedMatch": null,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-02",
+            "className": "sect",
+            "family": "云剑•厚土",
+            "relPath": "images/sect/cloud-spirit/1/云剑•厚土2.png"
+          },
+          "cardB": {
+            "id": "sample-24",
+            "className": "dream",
+            "family": "梦•劈山掌",
+            "relPath": "images/seasonal/duan-xuan/梦•劈山掌3.png"
+          },
+          "metrics": {
+            "ncc": 0.0953,
+            "grayMse": 11461.162502,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "truly_random",
+          "pairIndex": 9,
+          "expectedMatch": null,
+          "actualMatch": true,
+          "cardA": {
+            "id": "sample-19",
+            "className": "dream",
+            "family": "梦•两仪阵",
+            "relPath": "images/seasonal/heptastar/梦•两仪阵1.png"
+          },
+          "cardB": {
+            "id": "sample-20",
+            "className": "dream",
+            "family": "梦•两仪阵",
+            "relPath": "images/seasonal/heptastar/梦•两仪阵2.png"
+          },
+          "metrics": {
+            "ncc": 0.998025,
+            "grayMse": 27.950364,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "truly_random",
+          "pairIndex": 10,
+          "expectedMatch": null,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-04",
+            "className": "sect",
+            "family": "五行刺",
+            "relPath": "images/sect/five-element/1/五行刺1.png"
+          },
+          "cardB": {
+            "id": "sample-25",
+            "className": "personal",
+            "family": "阴符玉简",
+            "relPath": "images/personal/FengXu/阴符玉简1.png"
+          },
+          "metrics": {
+            "ncc": 0.226182,
+            "grayMse": 8279.356848,
+            "pixelCount": 7560
+          }
+        }
+      ]
+    },
+    {
+      "name": "sect_vs_personal",
+      "expectedMatch": false,
+      "availablePairCount": 144,
+      "sampledPairCount": 10,
+      "summary": {
+        "count": 10,
+        "actualMatchCount": 0,
+        "actualNonMatchCount": 10,
+        "nccMean": 0.16592,
+        "nccMedian": 0.168299,
+        "grayMseMean": 8138.281474,
+        "grayMseMedian": 8457.100273
+      },
+      "pairs": [
+        {
+          "bucket": "sect_vs_personal",
+          "pairIndex": 1,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-11",
+            "className": "sect",
+            "family": "劈山掌",
+            "relPath": "images/sect/duan-xuan/1/劈山掌2.png"
+          },
+          "cardB": {
+            "id": "sample-29",
+            "className": "personal",
+            "family": "孤虚金书",
+            "relPath": "images/personal/FengXu/孤虚金书2.png"
+          },
+          "metrics": {
+            "ncc": 0.174532,
+            "grayMse": 9175.506685,
+            "pixelCount": 7513
+          }
+        },
+        {
+          "bucket": "sect_vs_personal",
+          "pairIndex": 2,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-10",
+            "className": "sect",
+            "family": "劈山掌",
+            "relPath": "images/sect/duan-xuan/1/劈山掌1.png"
+          },
+          "cardB": {
+            "id": "sample-32",
+            "className": "personal",
+            "family": "木灵•桃花印",
+            "relPath": "images/personal/HuaQinrui/木灵•桃花印2.png"
+          },
+          "metrics": {
+            "ncc": 0.280228,
+            "grayMse": 8709.256554,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_vs_personal",
+          "pairIndex": 3,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-03",
+            "className": "sect",
+            "family": "云剑•厚土",
+            "relPath": "images/sect/cloud-spirit/1/云剑•厚土3.png"
+          },
+          "cardB": {
+            "id": "sample-33",
+            "className": "personal",
+            "family": "木灵•桃花印",
+            "relPath": "images/personal/HuaQinrui/木灵•桃花印3.png"
+          },
+          "metrics": {
+            "ncc": 0.162066,
+            "grayMse": 7552.225169,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_vs_personal",
+          "pairIndex": 4,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-09",
+            "className": "sect",
+            "family": "两仪阵",
+            "relPath": "images/sect/heptastar/3/两仪阵3.png"
+          },
+          "cardB": {
+            "id": "sample-34",
+            "className": "personal",
+            "family": "双节棍",
+            "relPath": "images/personal/LiMan/双节棍1.png"
+          },
+          "metrics": {
+            "ncc": 0.1983,
+            "grayMse": 7078.09333,
+            "pixelCount": 8190
+          }
+        },
+        {
+          "bucket": "sect_vs_personal",
+          "pairIndex": 5,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-10",
+            "className": "sect",
+            "family": "劈山掌",
+            "relPath": "images/sect/duan-xuan/1/劈山掌1.png"
+          },
+          "cardB": {
+            "id": "sample-30",
+            "className": "personal",
+            "family": "孤虚金书",
+            "relPath": "images/personal/FengXu/孤虚金书3.png"
+          },
+          "metrics": {
+            "ncc": 0.06353,
+            "grayMse": 9174.771134,
+            "pixelCount": 7930
+          }
+        },
+        {
+          "bucket": "sect_vs_personal",
+          "pairIndex": 6,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-08",
+            "className": "sect",
+            "family": "两仪阵",
+            "relPath": "images/sect/heptastar/3/两仪阵2.png"
+          },
+          "cardB": {
+            "id": "sample-34",
+            "className": "personal",
+            "family": "双节棍",
+            "relPath": "images/personal/LiMan/双节棍1.png"
+          },
+          "metrics": {
+            "ncc": 0.42487,
+            "grayMse": 5767.524941,
+            "pixelCount": 8190
+          }
+        },
+        {
+          "bucket": "sect_vs_personal",
+          "pairIndex": 7,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-09",
+            "className": "sect",
+            "family": "两仪阵",
+            "relPath": "images/sect/heptastar/3/两仪阵3.png"
+          },
+          "cardB": {
+            "id": "sample-30",
+            "className": "personal",
+            "family": "孤虚金书",
+            "relPath": "images/personal/FengXu/孤虚金书3.png"
+          },
+          "metrics": {
+            "ncc": -0.028759,
+            "grayMse": 7753.567508,
+            "pixelCount": 7930
+          }
+        },
+        {
+          "bucket": "sect_vs_personal",
+          "pairIndex": 8,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-04",
+            "className": "sect",
+            "family": "五行刺",
+            "relPath": "images/sect/five-element/1/五行刺1.png"
+          },
+          "cardB": {
+            "id": "sample-27",
+            "className": "personal",
+            "family": "阴符玉简",
+            "relPath": "images/personal/FengXu/阴符玉简3.png"
+          },
+          "metrics": {
+            "ncc": 0.087804,
+            "grayMse": 8214.747051,
+            "pixelCount": 7920
+          }
+        },
+        {
+          "bucket": "sect_vs_personal",
+          "pairIndex": 9,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-11",
+            "className": "sect",
+            "family": "劈山掌",
+            "relPath": "images/sect/duan-xuan/1/劈山掌2.png"
+          },
+          "cardB": {
+            "id": "sample-31",
+            "className": "personal",
+            "family": "木灵•桃花印",
+            "relPath": "images/personal/HuaQinrui/木灵•桃花印1.png"
+          },
+          "metrics": {
+            "ncc": 0.279358,
+            "grayMse": 8699.453494,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_vs_personal",
+          "pairIndex": 10,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-07",
+            "className": "sect",
+            "family": "两仪阵",
+            "relPath": "images/sect/heptastar/3/两仪阵1.png"
+          },
+          "cardB": {
+            "id": "sample-30",
+            "className": "personal",
+            "family": "孤虚金书",
+            "relPath": "images/personal/FengXu/孤虚金书3.png"
+          },
+          "metrics": {
+            "ncc": 0.017273,
+            "grayMse": 9257.668872,
+            "pixelCount": 7930
+          }
+        }
+      ]
+    },
+    {
+      "name": "sect_vs_dream",
+      "expectedMatch": false,
+      "availablePairCount": 144,
+      "sampledPairCount": 10,
+      "summary": {
+        "count": 10,
+        "actualMatchCount": 0,
+        "actualNonMatchCount": 10,
+        "nccMean": 0.085264,
+        "nccMedian": 0.100674,
+        "grayMseMean": 10768.63073,
+        "grayMseMedian": 10771.793373
+      },
+      "pairs": [
+        {
+          "bucket": "sect_vs_dream",
+          "pairIndex": 1,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-03",
+            "className": "sect",
+            "family": "云剑•厚土",
+            "relPath": "images/sect/cloud-spirit/1/云剑•厚土3.png"
+          },
+          "cardB": {
+            "id": "sample-23",
+            "className": "dream",
+            "family": "梦•劈山掌",
+            "relPath": "images/seasonal/duan-xuan/梦•劈山掌2.png"
+          },
+          "metrics": {
+            "ncc": 0.035706,
+            "grayMse": 10759.210361,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_vs_dream",
+          "pairIndex": 2,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-11",
+            "className": "sect",
+            "family": "劈山掌",
+            "relPath": "images/sect/duan-xuan/1/劈山掌2.png"
+          },
+          "cardB": {
+            "id": "sample-23",
+            "className": "dream",
+            "family": "梦•劈山掌",
+            "relPath": "images/seasonal/duan-xuan/梦•劈山掌2.png"
+          },
+          "metrics": {
+            "ncc": 0.105503,
+            "grayMse": 11172.307811,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_vs_dream",
+          "pairIndex": 3,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-10",
+            "className": "sect",
+            "family": "劈山掌",
+            "relPath": "images/sect/duan-xuan/1/劈山掌1.png"
+          },
+          "cardB": {
+            "id": "sample-18",
+            "className": "dream",
+            "family": "梦•五行刺",
+            "relPath": "images/seasonal/five-element/梦•五行刺3.png"
+          },
+          "metrics": {
+            "ncc": 0.135444,
+            "grayMse": 10507.227321,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_vs_dream",
+          "pairIndex": 4,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-05",
+            "className": "sect",
+            "family": "五行刺",
+            "relPath": "images/sect/five-element/1/五行刺2.png"
+          },
+          "cardB": {
+            "id": "sample-16",
+            "className": "dream",
+            "family": "梦•五行刺",
+            "relPath": "images/seasonal/five-element/梦•五行刺1.png"
+          },
+          "metrics": {
+            "ncc": 0.107764,
+            "grayMse": 10096.252221,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_vs_dream",
+          "pairIndex": 5,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-07",
+            "className": "sect",
+            "family": "两仪阵",
+            "relPath": "images/sect/heptastar/3/两仪阵1.png"
+          },
+          "cardB": {
+            "id": "sample-14",
+            "className": "dream",
+            "family": "梦•云剑厚土",
+            "relPath": "images/seasonal/cloud-spirit/梦•云剑厚土2.png"
+          },
+          "metrics": {
+            "ncc": 0.060204,
+            "grayMse": 11384.998587,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_vs_dream",
+          "pairIndex": 6,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-11",
+            "className": "sect",
+            "family": "劈山掌",
+            "relPath": "images/sect/duan-xuan/1/劈山掌2.png"
+          },
+          "cardB": {
+            "id": "sample-22",
+            "className": "dream",
+            "family": "梦•劈山掌",
+            "relPath": "images/seasonal/duan-xuan/梦•劈山掌1.png"
+          },
+          "metrics": {
+            "ncc": 0.111905,
+            "grayMse": 11053.017805,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_vs_dream",
+          "pairIndex": 7,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-02",
+            "className": "sect",
+            "family": "云剑•厚土",
+            "relPath": "images/sect/cloud-spirit/1/云剑•厚土2.png"
+          },
+          "cardB": {
+            "id": "sample-20",
+            "className": "dream",
+            "family": "梦•两仪阵",
+            "relPath": "images/seasonal/heptastar/梦•两仪阵2.png"
+          },
+          "metrics": {
+            "ncc": 0.095844,
+            "grayMse": 10934.985115,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_vs_dream",
+          "pairIndex": 8,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-02",
+            "className": "sect",
+            "family": "云剑•厚土",
+            "relPath": "images/sect/cloud-spirit/1/云剑•厚土2.png"
+          },
+          "cardB": {
+            "id": "sample-17",
+            "className": "dream",
+            "family": "梦•五行刺",
+            "relPath": "images/seasonal/five-element/梦•五行刺2.png"
+          },
+          "metrics": {
+            "ncc": 0.133706,
+            "grayMse": 10409.289627,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_vs_dream",
+          "pairIndex": 9,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-08",
+            "className": "sect",
+            "family": "两仪阵",
+            "relPath": "images/sect/heptastar/3/两仪阵2.png"
+          },
+          "cardB": {
+            "id": "sample-17",
+            "className": "dream",
+            "family": "梦•五行刺",
+            "relPath": "images/seasonal/five-element/梦•五行刺2.png"
+          },
+          "metrics": {
+            "ncc": 0.057637,
+            "grayMse": 10784.376384,
+            "pixelCount": 8640
+          }
+        },
+        {
+          "bucket": "sect_vs_dream",
+          "pairIndex": 10,
+          "expectedMatch": false,
+          "actualMatch": false,
+          "cardA": {
+            "id": "sample-12",
+            "className": "sect",
+            "family": "劈山掌",
+            "relPath": "images/sect/duan-xuan/1/劈山掌3.png"
+          },
+          "cardB": {
+            "id": "sample-15",
+            "className": "dream",
+            "family": "梦•云剑厚土",
+            "relPath": "images/seasonal/cloud-spirit/梦•云剑厚土3.png"
+          },
+          "metrics": {
+            "ncc": 0.008931,
+            "grayMse": 10584.642069,
+            "pixelCount": 8640
+          }
+        }
+      ]
+    }
+  ]
+}

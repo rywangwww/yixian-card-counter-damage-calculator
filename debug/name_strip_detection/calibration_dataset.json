@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "classes": {
+    "sect": [
+      {
+        "family": "云剑•厚土",
+        "images": [
+          "images/sect/cloud-spirit/1/云剑•厚土1.png",
+          "images/sect/cloud-spirit/1/云剑•厚土2.png",
+          "images/sect/cloud-spirit/1/云剑•厚土3.png"
+        ]
+      },
+      {
+        "family": "五行刺",
+        "images": [
+          "images/sect/five-element/1/五行刺1.png",
+          "images/sect/five-element/1/五行刺2.png",
+          "images/sect/five-element/1/五行刺3.png"
+        ]
+      },
+      {
+        "family": "两仪阵",
+        "images": [
+          "images/sect/heptastar/3/两仪阵1.png",
+          "images/sect/heptastar/3/两仪阵2.png",
+          "images/sect/heptastar/3/两仪阵3.png"
+        ]
+      },
+      {
+        "family": "劈山掌",
+        "images": [
+          "images/sect/duan-xuan/1/劈山掌1.png",
+          "images/sect/duan-xuan/1/劈山掌2.png",
+          "images/sect/duan-xuan/1/劈山掌3.png"
+        ]
+      }
+    ],
+    "dream": [
+      {
+        "family": "梦•云剑厚土",
+        "images": [
+          "images/seasonal/cloud-spirit/梦•云剑厚土1.png",
+          "images/seasonal/cloud-spirit/梦•云剑厚土2.png",
+          "images/seasonal/cloud-spirit/梦•云剑厚土3.png"
+        ]
+      },
+      {
+        "family": "梦•五行刺",
+        "images": [
+          "images/seasonal/five-element/梦•五行刺1.png",
+          "images/seasonal/five-element/梦•五行刺2.png",
+          "images/seasonal/five-element/梦•五行刺3.png"
+        ]
+      },
+      {
+        "family": "梦•两仪阵",
+        "images": [
+          "images/seasonal/heptastar/梦•两仪阵1.png",
+          "images/seasonal/heptastar/梦•两仪阵2.png",
+          "images/seasonal/heptastar/梦•两仪阵3.png"
+        ]
+      },
+      {
+        "family": "梦•劈山掌",
+        "images": [
+          "images/seasonal/duan-xuan/梦•劈山掌1.png",
+          "images/seasonal/duan-xuan/梦•劈山掌2.png",
+          "images/seasonal/duan-xuan/梦•劈山掌3.png"
+        ]
+      }
+    ],
+    "personal": [
+      {
+        "family": "阴符玉简",
+        "images": [
+          "images/personal/FengXu/阴符玉简1.png",
+          "images/personal/FengXu/阴符玉简2.png",
+          "images/personal/FengXu/阴符玉简3.png"
+        ]
+      },
+      {
+        "family": "孤虚金书",
+        "images": [
+          "images/personal/FengXu/孤虚金书1.png",
+          "images/personal/FengXu/孤虚金书2.png",
+          "images/personal/FengXu/孤虚金书3.png"
+        ]
+      },
+      {
+        "family": "木灵•桃花印",
+        "images": [
+          "images/personal/HuaQinrui/木灵•桃花印1.png",
+          "images/personal/HuaQinrui/木灵•桃花印2.png",
+          "images/personal/HuaQinrui/木灵•桃花印3.png"
+        ]
+      },
+      {
+        "family": "双节棍",
+        "images": [
+          "images/personal/LiMan/双节棍1.png",
+          "images/personal/LiMan/双节棍2.png",
+          "images/personal/LiMan/双节棍3.png"
+        ]
+      }
+    ]
+  }
+}

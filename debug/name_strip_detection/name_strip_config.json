@@ -1,0 +1,149 @@
+{
+  "version": 1,
+  "resize": {
+    "targetHeight": 192
+  },
+  "alphaThreshold": 24,
+  "search": {
+    "coarseStep": {
+      "x": 0.03,
+      "y": 0.03,
+      "width": 0.03,
+      "height": 0.04
+    },
+    "fineRadius": {
+      "x": 0.02,
+      "y": 0.02,
+      "width": 0.02,
+      "height": 0.03
+    },
+    "fineStep": {
+      "x": 0.01,
+      "y": 0.01,
+      "width": 0.01,
+      "height": 0.01
+    }
+  },
+  "classes": {
+    "sect": {
+      "lockFullHeight": true,
+      "initialRect": {
+        "x": 0.1,
+        "y": 0,
+        "width": 0.14,
+        "height": 0.6
+      },
+      "bounds": {
+        "x": {
+          "min": 0.04,
+          "max": 0.12
+        },
+        "y": {
+          "min": 0,
+          "max": 0
+        },
+        "width": {
+          "min": 0.1,
+          "max": 0.22
+        },
+        "height": {
+          "min": 0.6,
+          "max": 0.6
+        }
+      },
+      "selectedRect": {
+        "x": 0.0988,
+        "y": 0,
+        "width": 0.1412,
+        "height": 0.6
+      },
+      "reviewRectOverride": {
+        "x": 0.0988,
+        "y": 0,
+        "width": 0.1412,
+        "height": 0.6
+      },
+      "status": "reviewed-override"
+    },
+    "dream": {
+      "lockFullHeight": true,
+      "initialRect": {
+        "x": 0.06,
+        "y": 0,
+        "width": 0.14,
+        "height": 0.6
+      },
+      "bounds": {
+        "x": {
+          "min": 0.02,
+          "max": 0.12
+        },
+        "y": {
+          "min": 0,
+          "max": 0
+        },
+        "width": {
+          "min": 0.1,
+          "max": 0.22
+        },
+        "height": {
+          "min": 0.6,
+          "max": 0.6
+        }
+      },
+      "selectedRect": {
+        "x": 0.0608,
+        "y": 0,
+        "width": 0.1392,
+        "height": 0.6
+      },
+      "reviewRectOverride": {
+        "x": 0.0608,
+        "y": 0,
+        "width": 0.1392,
+        "height": 0.6
+      },
+      "status": "reviewed-override"
+    },
+    "personal": {
+      "lockFullHeight": true,
+      "initialRect": {
+        "x": 0.11,
+        "y": 0,
+        "width": 0.14,
+        "height": 0.6
+      },
+      "bounds": {
+        "x": {
+          "min": 0.05,
+          "max": 0.14
+        },
+        "y": {
+          "min": 0,
+          "max": 0
+        },
+        "width": {
+          "min": 0.1,
+          "max": 0.2
+        },
+        "height": {
+          "min": 0.6,
+          "max": 0.6
+        }
+      },
+      "selectedRect": {
+        "x": 0.109,
+        "y": 0,
+        "width": 0.1398,
+        "height": 0.6
+      },
+      "reviewRectOverride": {
+        "x": 0.109,
+        "y": 0,
+        "width": 0.1398,
+        "height": 0.6
+      },
+      "status": "reviewed-override"
+    }
+  }
+}

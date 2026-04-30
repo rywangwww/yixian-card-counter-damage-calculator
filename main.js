@@ -2,12 +2,12 @@ const { app, BrowserWindow, ipcMain, screen, desktopCapturer, globalShortcut } =
 const path = require('path');
 const fs = require('fs');
 const chokidar = require('chokidar');
-const {
-  detectSlots,
-  NUM_SLOTS,
-  setCalibration: setSlotCalibration,
-  getActiveGeometry: getActiveSlotGeometry
-} = require('./slot_detector');
+// ── Card detection backend — swap these two lines to toggle methods ───────────
+// Full-image MSE/NCC detector (original):
+// const { detectSlots, NUM_SLOTS, setCalibration: setSlotCalibration, getActiveGeometry: getActiveSlotGeometry } = require('./slot_detector');
+// Name-strip NCC detector (active):
+const { detectSlotsNameStrip: detectSlots, setCalibration: setSlotCalibration, NUM_SLOTS } = require('./name_strip_detector');
+const { getActiveGeometry: getActiveSlotGeometry, setCalibration: setSlotDetectorCalibration } = require('./slot_detector');
 const { loadCardNameTranslations: loadYisimCardNameTranslations, simulateFirstEightTurns } = require('./yisim_adapter');
 const { loadCardLibrary } = require('./card_metadata');
 const { detectTalents, buildFallbackTalentResults, setCalibration: setTalentCalibration } = require('./talent_detector');
@@ -311,25 +311,80 @@ function getCaptureOverlayMetrics(screenshotSize = null) {
   const effectiveScreenshotSize = screenshotSize
     ? { width: Number(screenshotSize.width) || fallbackScreenshotSize.width, height: Number(screenshotSize.height) || fallbackScreenshotSize.height }
     : fallbackScreenshotSize;
-  // Derive overlay size purely from screenshotSize and displayScaleFactor.
-  //
-  // We deliberately do NOT use damageWindow.getContentSize() here, even
-  // though that's the actual rendering surface, because Windows clips a
-  // normal top-level BrowserWindow to the work area (excluding the taskbar).
-  // At 1.25 DPI on a 1920×1080 screen with a 48 px logical taskbar that
-  // yields an overlay reported as 1536×816 — height-scaleY = 816/1080 =
-  // 0.756, but width-scaleX = 1536/1920 = 0.800. The asymmetric scale was
-  // dropping every projected y by ~12 px (debug boxes drew above the
-  // cards). Using displayScaleFactor as the single inverse keeps
-  // scaleX === scaleY = 1/displayScaleFactor.
-  const overlaySize = {
+
+  // DPI-derived overlay size: assume the BrowserWindow's CSS content area
+  // equals screenshotSize / displayScaleFactor. Correct on most machines.
+  const dpiOverlaySize = {
     width:  Math.max(1, Math.round(effectiveScreenshotSize.width  / displayScaleFactor)),
     height: Math.max(1, Math.round(effectiveScreenshotSize.height / displayScaleFactor))
   };
+
+  // Authoritative source: the actual damage window's CSS content size.
+  // Prefer this when both axes agree (or are uniformly off — e.g. macOS
+  // scaled-retina where primary.size × scaleFactor ≠ screenshot pixels).
+  // Fall back to dpiOverlaySize when only one axis disagrees: that's the
+  // Windows chrome-trim case (e.g. 1.25 DPI 1920×1080 with taskbar →
+  // content 1536×816 vs DPI 1536×864), where using the asymmetric content
+  // size for projection drops every Y by ~12 px (debug boxes drew above
+  // the cards). Keeping a symmetric scale = 1/displayScaleFactor is what
+  // protects against that.
+  let contentOverlaySize = null;
+  if (damageWindow && !damageWindow.isDestroyed?.()) {
+    try {
+      const [cw, ch] = damageWindow.getContentSize();
+      if (cw > 0 && ch > 0) contentOverlaySize = { width: cw, height: ch };
+    } catch (_e) { /* window not ready yet — fall back to DPI */ }
+  }
+
+  let overlaySize = dpiOverlaySize;
+  let overlayBasis = 'dpi';
+  if (contentOverlaySize) {
+    // Validate dpiOverlaySize against the display's reported CSS size.
+    // The "screenshot ÷ scaleFactor" formula is only meaningful when the
+    // capture comes back at native physical resolution. When Electron's
+    // capturer returns a downscaled thumbnail (e.g. 1920×1080 capture on
+    // a 2560×1440 1.5× display, where screenshot ÷ 1.5 = 1280×720 ≠
+    // primary.size 1707×960), the formula is invalid and the chrome-trim
+    // branch below misclassifies the mismatch. In that case the actual
+    // damage-window content size IS the projection target.
+    const primarySize = primary.size || { width: 1, height: 1 };
+    const dpiMatchesDisplay =
+      Math.abs(dpiOverlaySize.width  - primarySize.width)  / Math.max(1, primarySize.width)  < 0.02 &&
+      Math.abs(dpiOverlaySize.height - primarySize.height) / Math.max(1, primarySize.height) < 0.02;
+
+    if (!dpiMatchesDisplay) {
+      overlaySize = contentOverlaySize;
+      overlayBasis = 'content-thumbnail-mismatch';
+    } else {
+      const dx = Math.abs(contentOverlaySize.width  - dpiOverlaySize.width)  / dpiOverlaySize.width;
+      const dy = Math.abs(contentOverlaySize.height - dpiOverlaySize.height) / dpiOverlaySize.height;
+      const TOL = 0.01;          // 1% — within rounding noise
+      const UNIFORM_TOL = 0.01;  // |dx − dy| under this means a multiplicative scale, not chrome-trim
+      const CHROME_TRIM = 0.02;  // single-axis divergence above this is taskbar/title-bar trim
+      if (dx < TOL && dy < TOL) {
+        overlaySize = contentOverlaySize;
+        overlayBasis = 'content-equal';
+      } else if (Math.abs(dx - dy) < UNIFORM_TOL) {
+        // Both axes uniformly off → content size is right, dpi-derived is wrong.
+        overlaySize = contentOverlaySize;
+        overlayBasis = 'content-uniform';
+      } else if (Math.max(dx, dy) > CHROME_TRIM) {
+        overlaySize = dpiOverlaySize;
+        overlayBasis = 'dpi-chrome-trim';
+      } else {
+        overlaySize = dpiOverlaySize;
+        overlayBasis = 'dpi';
+      }
+    }
+  }
+
   return {
     screenshotSize: effectiveScreenshotSize,
     overlaySize,
-    displayScaleFactor
+    displayScaleFactor,
+    overlayBasis,
+    dpiOverlaySize,
+    contentOverlaySize
   };
 }
 
@@ -369,6 +424,15 @@ function writeAlignmentDiagnostic(snapshot) {
   if (alignmentDiagWriteFailed) return;
   try {
     const primary = screen.getPrimaryDisplay();
+    let damageWindowContentSize = null;
+    let damageWindowBounds = null;
+    if (damageWindow && !damageWindow.isDestroyed?.()) {
+      try {
+        const [cw, ch] = damageWindow.getContentSize();
+        damageWindowContentSize = { width: cw, height: ch };
+        damageWindowBounds = damageWindow.getBounds();
+      } catch (_e) { /* window not ready */ }
+    }
     const payload = {
       writtenAt: new Date().toISOString(),
       primaryDisplay: {
@@ -378,6 +442,8 @@ function writeAlignmentDiagnostic(snapshot) {
         workArea:       primary.workArea,
         rotation:       primary.rotation
       },
+      damageWindowContentSize,
+      damageWindowBounds,
       ...snapshot
     };
     const filePath = getWritablePath('overlay_alignment.json');
@@ -421,6 +487,7 @@ let calibrationData = null;
 function applyCalibration(data) {
   calibrationData = data || null;
   setSlotCalibration(calibrationData);
+  setSlotDetectorCalibration(calibrationData); // keeps getActiveSlotGeometry working when swapping back to slot_detector
   setTalentCalibration(calibrationData);
 }
 
@@ -1190,6 +1257,9 @@ async function performBoardCapture() {
       contentRect,
       overlaySize: captureMetrics.overlaySize,
       displayScaleFactor: captureMetrics.displayScaleFactor,
+      overlayBasis: captureMetrics.overlayBasis,
+      dpiOverlaySize: captureMetrics.dpiOverlaySize,
+      contentOverlaySize: captureMetrics.contentOverlaySize,
       detectorRects: slotResults.map((r) => r?.rect || null),
       projectedRects: projectedSlotResults.map((r) => r?.rect || null)
     });

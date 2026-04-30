@@ -35,7 +35,19 @@
       "Bash(node .dream_audit_extract_code.js)",
       "Bash(node _tmp_inspect.js)",
       "Bash(node -c \"c:/Users/raymo/OneDrive/Documents/testing-godot/yixian-card-counter-damage-calculator/calibrator.js\")",
-      "PowerShell(Add-Type -AssemblyName System.Drawing; $src = 'c:\\\\Users\\\\raymo\\\\OneDrive\\\\Documents\\\\testing-godot\\\\yixian-card-counter-damage-calculator\\\\debug\\\\calibration\\\\calibration_capture2.webp'; $dst = 'c:\\\\Users\\\\raymo\\\\OneDrive\\\\Documents\\\\testing-godot\\\\yixian-card-counter-damage-calculator\\\\debug\\\\calibration\\\\calibration_capture2.png'; $img = [System.Drawing.Image]::FromFile\\($src\\); $img.Save\\($dst, [System.Drawing.Imaging.ImageFormat]::Png\\); $img.Dispose\\(\\); \"Saved: $dst \\($\\($img.Width\\)x$\\($img.Height\\)\\)\")"
+      "PowerShell(Add-Type -AssemblyName System.Drawing; $src = 'c:\\\\Users\\\\raymo\\\\OneDrive\\\\Documents\\\\testing-godot\\\\yixian-card-counter-damage-calculator\\\\debug\\\\calibration\\\\calibration_capture2.webp'; $dst = 'c:\\\\Users\\\\raymo\\\\OneDrive\\\\Documents\\\\testing-godot\\\\yixian-card-counter-damage-calculator\\\\debug\\\\calibration\\\\calibration_capture2.png'; $img = [System.Drawing.Image]::FromFile\\($src\\); $img.Save\\($dst, [System.Drawing.Imaging.ImageFormat]::Png\\); $img.Dispose\\(\\); \"Saved: $dst \\($\\($img.Width\\)x$\\($img.Height\\)\\)\")",
+      "Bash(node debug/name_strip_detection/detect_cards_by_name_strip.js)",
+      "Bash(grep -E '\\\\.\\(js|json\\)$')",
+      "Bash(xxd)",
+      "Bash(node debug/name_strip_detection_check/test_check1.js)",
+      "Bash(node debug/name_strip_detection_check/dump_slot_crops.js)",
+      "Bash(node debug/name_strip_detection_check/dump_template_strips.js)",
+      "Bash(node debug/name_strip_detection_check/sweep_top_correction.js)",
+      "Bash(node debug/name_strip_detection_check/overlay_template_on_slot0.js)",
+      "Bash(env -u ELECTRON_RUN_AS_NODE node_modules/.bin/electron debug/name_strip_detection_check/test_phase_resolution.js)",
+      "Bash(env -u ELECTRON_RUN_AS_NODE node_modules/.bin/electron debug/name_strip_detection_check/test_calibration_capture.js)",
+      "Bash(env -u ELECTRON_RUN_AS_NODE node_modules/.bin/electron debug/name_strip_detection_check/test_search_scaling.js)",
+      "Bash(env -u ELECTRON_RUN_AS_NODE node_modules/.bin/electron debug/name_strip_detection_check/test_check2.js)"
     ]
   }
 }

@@ -1265,5 +1265,11 @@ module.exports = {
   getActiveGeometry,
   buildTemplateIndex,
   detectSlots,
-  normalizeCardName
+  normalizeCardName,
+  // Exposed so name_strip_detector.js can reuse the dream-phase resolver
+  // without duplicating its chromatic-rank logic.
+  resolveDreamPhase,
+  extractSubGray,
+  extractSubRgb,
+  getTemplateRawData
 };
