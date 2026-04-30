@@ -47,7 +47,12 @@
       "Bash(env -u ELECTRON_RUN_AS_NODE node_modules/.bin/electron debug/name_strip_detection_check/test_phase_resolution.js)",
       "Bash(env -u ELECTRON_RUN_AS_NODE node_modules/.bin/electron debug/name_strip_detection_check/test_calibration_capture.js)",
       "Bash(env -u ELECTRON_RUN_AS_NODE node_modules/.bin/electron debug/name_strip_detection_check/test_search_scaling.js)",
-      "Bash(env -u ELECTRON_RUN_AS_NODE node_modules/.bin/electron debug/name_strip_detection_check/test_check2.js)"
+      "Bash(env -u ELECTRON_RUN_AS_NODE node_modules/.bin/electron debug/name_strip_detection_check/test_check2.js)",
+      "Bash(ELECTRON_RUN_AS_NODE= node_modules/electron/dist/Electron.app/Contents/MacOS/Electron debug/dream_card_phase_differentiation/identify_cards.js)",
+      "Bash(node debug/dream_card_phase_differentiation/inspect_phase_differences.js)",
+      "Bash(node debug/dream_card_phase_differentiation/inspect_phase_differences.js debug/name_strip_detection_check/check1.png 梦•混元碎击 0 '__TRACKED_VAR__/Library/Application Support/yixian-overlay/calibration.json')",
+      "Bash(ELECTRON_RUN_AS_NODE= node_modules/electron/dist/Electron.app/Contents/MacOS/Electron debug/name_strip_detection_check/test_phase_resolution.js)",
+      "Bash(npx --no-install electron-builder --win nsis zip --x64 --publish never)"
     ]
   }
 }

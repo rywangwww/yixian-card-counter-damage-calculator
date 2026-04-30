@@ -475,6 +475,24 @@ function rgbToChromaticity(avg) {
   return { r: avg.r / sum, g: avg.g / sum, b: avg.b / sum };
 }
 
+// Chromaticity (hue ratio) + raw RGB (brightness/saturation) combined.
+//
+// Chromaticity normalises brightness out, which is what we want for cards
+// where phases differ only in hue (e.g. 梦•海底捞月 P2 vs P3 — green vs
+// purple tint at similar brightness). But cards like 梦•两仪阵 differ in
+// BRIGHTNESS between phases (P1 darker, P5 brighter); chromaticity makes
+// them numerically indistinguishable and the detector flips between them on
+// any calibration drift.
+//
+// Adding raw-RGB Euclidean distance (scaled by 1/255 × RAW_RGB_WEIGHT to
+// land in the same 0-1 magnitude band as chromaticity) brings brightness
+// back into the metric without knocking the chromaticity-driven cases off
+// the cliff. Empirically validated against 5 of 6 ground-truth wrong cases
+// from fengxuround6/15: 4 round-15 P5 cards plus 梦•海底捞月 P2 keep their
+// winners, and 梦•轰雷掣电 P3-vs-P2 stays tight (genuinely art-pixel-level
+// signal — neither chromaticity nor raw RGB picks P2).
+const RAW_RGB_WEIGHT = 0.3;
+
 function chromaticRegionsDistance(cropAvgs, templateAvgs) {
   if (!cropAvgs || !templateAvgs) return Number.POSITIVE_INFINITY;
   let total = 0;
@@ -482,8 +500,14 @@ function chromaticRegionsDistance(cropAvgs, templateAvgs) {
     const a = rgbToChromaticity(cropAvgs[i]);
     const b = rgbToChromaticity(templateAvgs[i]);
     if (!a || !b) return Number.POSITIVE_INFINITY;
-    const dr = a.r - b.r, dg = a.g - b.g, db = a.b - b.b;
-    total += Math.sqrt((dr * dr) + (dg * dg) + (db * db));
+    // Chromaticity (hue) component.
+    const drC = a.r - b.r, dgC = a.g - b.g, dbC = a.b - b.b;
+    total += Math.sqrt((drC * drC) + (dgC * dgC) + (dbC * dbC));
+    // Raw RGB (brightness/saturation) component.
+    const drR = cropAvgs[i].r - templateAvgs[i].r;
+    const dgR = cropAvgs[i].g - templateAvgs[i].g;
+    const dbR = cropAvgs[i].b - templateAvgs[i].b;
+    total += Math.sqrt((drR * drR) + (dgR * dgR) + (dbR * dbR)) / 255 * RAW_RGB_WEIGHT;
   }
   return total;
 }

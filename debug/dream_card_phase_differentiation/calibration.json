@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "screenshotSize": {
+    "width": 1920,
+    "height": 1080
+  },
+  "slots": {
+    "baseScreenWidth": 1920,
+    "baseScreenHeight": 1080,
+    "slotY": 273,
+    "slotWidth": 213,
+    "slotHeight": 343,
+    "slotXPositions": [
+      45,
+      276,
+      507,
+      738,
+      969,
+      1200,
+      1431,
+      1662
+    ],
+    "dreamSlotRatio": {
+      "width": 0.925,
+      "height": 0.977
+    },
+    "dreamXOffset": 8
+  },
+  "talents": [
+    {
+      "x": 238,
+      "y": 1008,
+      "width": 62,
+      "height": 62
+    },
+    {
+      "x": 130,
+      "y": 988,
+      "width": 70,
+      "height": 70
+    },
+    {
+      "x": 42,
+      "y": 918,
+      "width": 74,
+      "height": 74
+    },
+    {
+      "x": 33,
+      "y": 813,
+      "width": 80,
+      "height": 80
+    },
+    {
+      "x": 79,
+      "y": 715,
+      "width": 84,
+      "height": 84
+    }
+  ],
+  "scores": {
+    "talents": [
+      0.87811641953849,
+      0.8265072189052383,
+      0.9299179830491039,
+      0.9293039108227445,
+      0.9886414660402744
+    ]
+  },
+  "calibratedAt": "2026-04-28T15:10:57.345Z"
+}
