@@ -12,7 +12,14 @@ let boardState = {
 };
 
 function getSlotRect(index) {
-  return boardState.capture?.slotResults?.[index]?.rect ||
+  const slot = boardState.capture?.slotResults?.[index];
+  // Prefer the normal/sect candidate rect so the badge stays in one place
+  // regardless of which card type wins detection. The winning `rect` shifts
+  // and resizes between sect/dream/personal templates (dream cards are
+  // shrunk and offset right; FengXu personal cards are larger and offset);
+  // anchoring on `candidateRects.normal` keeps the badge fixed.
+  return slot?.candidateRects?.normal ||
+    slot?.rect ||
     boardState.capture?.fallbackSlotRects?.[index] ||
     null;
 }
