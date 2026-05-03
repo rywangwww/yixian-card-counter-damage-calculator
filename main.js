@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, screen, desktopCapturer, globalShortcut } = require('electron');
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
 const chokidar = require('chokidar');
@@ -22,7 +23,7 @@ const {
 const { getNativeImagePixelSize, getNativeImageOpaqueBounds } = require('./native_image_pixels');
 const { computeLayoutTransform } = require('./rect_scale');
 
-const BOARD_CAPTURE_INTERVAL_MS = 1000;
+const BOARD_CAPTURE_INTERVAL_MS = 500;
 const GAME_SOURCE_PATTERNS = ['弈仙牌', 'yixianpai', 'yi xian pai', 'yi xian: cultivation card game'];
 const SIDE_MARGIN = 20;
 const BOARD_TOP_MARGIN = 8;
@@ -52,6 +53,9 @@ let latestBoardPayload = null;
 let latestBoardPayloadJson = null;
 let boardCaptureInFlight = false;
 let boardCapturePending = false;
+let lastSimulationSignature = null;
+let lastSimulationPreview = null;
+let isQuitting = false;
 
 function getStartupLogPath() {
   try {
@@ -1215,12 +1219,26 @@ async function performBoardCapture() {
     const projectedTalents = projectTalentsToOverlaySpace(talentCapture.talents, captureMetrics, contentRect);
     const slots = slotResults.map((result) => result.card);
     const activeSlots = slots.slice(0, realOpenSlots);
-    const damagePreview = await simulateFirstEightTurns(activeSlots, {
+    const simulationSignature = JSON.stringify({
+      slots: activeSlots.map((c) => c ? { name: c.name, level: c.level, phase: c.phase ?? null, isDream: !!c.isDream } : null),
       deckSlots: realOpenSlots,
-      playerState: battleState.simulationPlayer,
       rollMode: settings.damageRollMode,
-      talents: talentCapture.talents
+      playerState: battleState.simulationPlayer,
+      talents: talentCapture.talents.map((t) => ({ position: t.position, name: t.name, detected: t.detected }))
     });
+    let damagePreview;
+    if (simulationSignature === lastSimulationSignature && lastSimulationPreview) {
+      damagePreview = lastSimulationPreview;
+    } else {
+      damagePreview = await simulateFirstEightTurns(activeSlots, {
+        deckSlots: realOpenSlots,
+        playerState: battleState.simulationPlayer,
+        rollMode: settings.damageRollMode,
+        talents: talentCapture.talents
+      });
+      lastSimulationSignature = simulationSignature;
+      lastSimulationPreview = damagePreview;
+    }
 
     emitBoardDetectionUpdated({
       slots,
@@ -1309,6 +1327,7 @@ async function performBoardCapture() {
 }
 
 async function captureBoardState() {
+  if (isQuitting) return;
   if (boardCaptureInFlight) {
     boardCapturePending = true;
     return;
@@ -1319,7 +1338,7 @@ async function captureBoardState() {
     await performBoardCapture();
   } finally {
     boardCaptureInFlight = false;
-    if (boardCapturePending) {
+    if (boardCapturePending && !isQuitting) {
       boardCapturePending = false;
       setImmediate(() => {
         captureBoardState().catch((error) => {
@@ -1371,6 +1390,18 @@ app.whenReady().then(() => {
     applyPanelVisibilityFromSettings();
     broadcastUiState();
     registerGlobalShortcuts();
+
+    autoUpdater.on('checking-for-update', () => appendStartupLog('autoUpdater: checking'));
+    autoUpdater.on('update-available', (info) => appendStartupLog('autoUpdater: update-available', info));
+    autoUpdater.on('update-not-available', () => appendStartupLog('autoUpdater: up to date'));
+    autoUpdater.on('download-progress', (p) => appendStartupLog(`autoUpdater: download ${Math.round(p.percent)}%`));
+    autoUpdater.on('update-downloaded', (info) => appendStartupLog('autoUpdater: downloaded', info));
+    autoUpdater.on('error', (err) => appendStartupLog('autoUpdater: error', err));
+
+    autoUpdater.checkForUpdatesAndNotify().catch((err) => {
+      console.warn('[autoUpdater] check failed:', err?.message || err);
+    });
+
     appendStartupLog('startup complete');
   } catch (error) {
     appendStartupLog('startup failed', error);
@@ -1378,7 +1409,14 @@ app.whenReady().then(() => {
   }
 });
 
+app.on('before-quit', () => {
+  isQuitting = true;
+  if (converterInterval) { clearInterval(converterInterval); converterInterval = null; }
+  if (boardCaptureInterval) { clearInterval(boardCaptureInterval); boardCaptureInterval = null; }
+});
+
 app.on('will-quit', () => {
+  isQuitting = true;
   if (converterInterval) clearInterval(converterInterval);
   if (boardCaptureInterval) clearInterval(boardCaptureInterval);
   watchedPaths.forEach((watcher) => {
@@ -1569,6 +1607,9 @@ function watchPath(p) {
 
     const notifyChange = (changedPath) => {
       if (path.basename(changedPath || '') !== base) return;
+      if (base === 'CardOperationLog.json') {
+        processOperationLog();
+      }
       if (cardListWindow && !cardListWindow.isDestroyed()) {
         cardListWindow.webContents.send('file-changed', p);
       }

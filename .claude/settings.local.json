@@ -57,7 +57,9 @@
       "Bash(node debug/dream_card_phase_differentiation/inspect_phase_differences.js fengxuround6.png \"梦•轰雷掣电\" 6)",
       "Bash(node debug/dream_card_phase_differentiation/dump_crops.js)",
       "Bash(node debug/dream_card_phase_differentiation/dump_top_strip_crops.js)",
-      "Bash(node debug/dream_card_phase_differentiation/test_top_strip_masked.js)"
+      "Bash(node debug/dream_card_phase_differentiation/test_top_strip_masked.js)",
+      "Bash(npx --no-install asar list dist/win-unpacked/resources/app.asar)",
+      "Bash(npm install *)"
     ]
   }
 }

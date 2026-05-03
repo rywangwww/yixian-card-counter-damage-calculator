@@ -1,6 +1,6 @@
 {
   "name": "yixian-overlay",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Minimal overlay card counter for YiXianPai (separate project)",
   "main": "main.js",
   "scripts": {
@@ -15,6 +15,7 @@
   "dependencies": {
     "@leeoniya/ufuzzy": "1.0.14",
     "chokidar": "^3.6.0",
+    "electron-updater": "^6.8.3",
     "seedrandom": "^3.0.5"
   },
   "devDependencies": {
@@ -25,6 +26,13 @@
     "appId": "com.raymondwang.yixian-overlay",
     "productName": "Yixian Overlay",
     "asar": true,
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "rywangwww",
+        "repo": "yixian-card-counter-damage-calculator"
+      }
+    ],
     "files": [
       "**/*",
       "!card detector{,/**}",
@@ -62,6 +70,20 @@
         "filter": [
           "**/*"
         ]
+      },
+      {
+        "from": "node_modules/@leeoniya/ufuzzy",
+        "to": "node_modules/@leeoniya/ufuzzy",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "node_modules/seedrandom",
+        "to": "node_modules/seedrandom",
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "mac": {
@@ -76,6 +98,14 @@
         "nsis",
         "zip"
       ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": false,
+      "menuCategory": false,
+      "include": "build/installer.nsh"
     }
   }
 }

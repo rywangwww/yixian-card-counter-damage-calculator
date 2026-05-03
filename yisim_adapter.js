@@ -489,14 +489,29 @@ function runSingleSimulation(GameState, player, opponent, rollMode, runtimeWrite
     }
   }
   applyRollModeOverrides(game, rollMode);
+  const MYSTERY_SEED_ID = "362021";
+  game.players[1].cards = Array(Math.max(1, game.players[1].cards.length)).fill(MYSTERY_SEED_ID);
   game.start_of_game_setup();
 
   const perTurnDamage = [];
   for (let turnIndex = 0; turnIndex < 8; turnIndex += 1) {
     const before = game.players[1].hp ?? 0;
+
     game.sim_turn();
+
+    if (game.game_over) {
+      const after = game.players[1].hp ?? before;
+      perTurnDamage.push(Math.max(0, before - after));
+      break;
+    }
+
+    game.swap_players();
+    game.sim_turn();
+    game.swap_players();
+
     const after = game.players[1].hp ?? before;
     perTurnDamage.push(Math.max(0, before - after));
+
     if (game.game_over) {
       break;
     }
