@@ -56,6 +56,9 @@ let boardCapturePending = false;
 let lastSimulationSignature = null;
 let lastSimulationPreview = null;
 let isQuitting = false;
+let settingsCache = null;
+let battleStateCache = { mtimeMs: 0, settingsKey: null, value: null };
+let handCandidatesCache = { mtimeMs: 0, value: [] };
 
 function getStartupLogPath() {
   try {
@@ -146,25 +149,31 @@ function normalizeSettings(rawSettings = {}) {
 }
 
 function loadSettings() {
+  if (settingsCache) return settingsCache;
   try {
     const settingsPath = getSettingsPath();
     if (fs.existsSync(settingsPath)) {
-      return normalizeSettings(JSON.parse(fs.readFileSync(settingsPath, 'utf8')));
+      settingsCache = normalizeSettings(JSON.parse(fs.readFileSync(settingsPath, 'utf8')));
+      return settingsCache;
     }
 
     const legacySettingsPath = getLegacyRepoPath('overlay_settings.json');
     if (fs.existsSync(legacySettingsPath)) {
       const migratedSettings = normalizeSettings(JSON.parse(fs.readFileSync(legacySettingsPath, 'utf8')));
       saveSettings(migratedSettings);
-      return migratedSettings;
+      settingsCache = migratedSettings;
+      return settingsCache;
     }
   } catch (e) {}
-  return normalizeSettings();
+  settingsCache = normalizeSettings();
+  return settingsCache;
 }
 
 function saveSettings(s) {
   try {
-    fs.writeFileSync(getSettingsPath(), JSON.stringify(normalizeSettings(s), null, 2));
+    const normalized = normalizeSettings(s);
+    fs.writeFileSync(getSettingsPath(), JSON.stringify(normalized, null, 2));
+    settingsCache = normalized;
   } catch (e) {
     console.error('Failed to save settings', e);
   }
@@ -224,12 +233,12 @@ function createOverlayWindow(bounds, htmlFile, focusable) {
   });
 
   win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
-  // Note: we deliberately do NOT call setContentProtection(true) here.
-  // setContentProtection sets WDA_EXCLUDEFROMCAPTURE on Windows, which would
-  // exclude the overlay from ALL screen captures — including the user's
-  // own screen recording software (OBS, Game Bar, etc.). The user wants the
-  // overlay visible in recordings, so we instead hide overlays only for the
-  // brief moment of our own desktopCapturer call (see captureWithOverlaysHidden).
+  // Permanently exclude overlay windows from screen capture (WDA_EXCLUDEFROMCAPTURE
+  // on Windows). Without this, desktopCapturer.getSources() enumerates the
+  // overlays every capture cycle and DWM briefly composites them for the
+  // thumbnail, producing a visible yellow border flash. Trade-off: the overlay
+  // will not appear in the user's own screen recordings (OBS, Game Bar).
+  win.setContentProtection(true);
   win.webContents.on('did-fail-load', (_event, errorCode, errorDescription, validatedURL, isMainFrame) => {
     if (!isMainFrame) return;
     appendStartupLog(`did-fail-load for ${htmlFile}`, {
@@ -424,6 +433,7 @@ function projectCaptureRectToOverlayRect(rect, captureMetrics, _contentRect = nu
 // rects that end up on the overlay. Send this file from each machine and
 // compare to pinpoint which value is drifting.
 let alignmentDiagWriteFailed = false;
+let lastAlignmentSignature = null;
 function writeAlignmentDiagnostic(snapshot) {
   if (alignmentDiagWriteFailed) return;
   try {
@@ -450,6 +460,12 @@ function writeAlignmentDiagnostic(snapshot) {
       damageWindowBounds,
       ...snapshot
     };
+    // Skip the disk write if geometry hasn't changed since last cycle.
+    // writtenAt is excluded from the signature so it doesn't churn every call.
+    const { writtenAt: _ignore, ...signaturePayload } = payload;
+    const signature = JSON.stringify(signaturePayload);
+    if (signature === lastAlignmentSignature) return;
+    lastAlignmentSignature = signature;
     const filePath = getWritablePath('overlay_alignment.json');
     fs.writeFileSync(filePath, JSON.stringify(payload, null, 2));
   } catch (error) {
@@ -756,6 +772,12 @@ function loadBattleState(settings) {
   }
 
   try {
+    const mtimeMs = fs.statSync(battleLogPath).mtimeMs;
+    if (battleStateCache.value
+        && battleStateCache.mtimeMs === mtimeMs
+        && battleStateCache.settingsKey === battleLogPath) {
+      return battleStateCache.value;
+    }
     const rounds = parseBattleLog(fs.readFileSync(battleLogPath, 'utf8'));
     if (!rounds || rounds.length === 0) {
       return {
@@ -777,7 +799,7 @@ function loadBattleState(settings) {
     const currentRound = Math.max(1, (latestRound?.round ?? 0) + 1);
     const openSlots = getOpenSlotsForRound(currentRound);
 
-    return {
+    const result = {
       status: 'ok',
       lastLoggedRound: latestRound?.round ?? 0,
       currentRound,
@@ -801,6 +823,8 @@ function loadBattleState(settings) {
         character: selectedPlayer.character || null
       } : null
     };
+    battleStateCache = { mtimeMs, settingsKey: battleLogPath, value: result };
+    return result;
   } catch (error) {
     return {
       status: 'battle-log-error',
@@ -837,14 +861,9 @@ function applyOpenSlotStateToResults(slotResults, fallbackSlotRects, openSlots) 
       ? (existing?.card ? 'detected' : 'undetected')
       : 'closed';
     return {
+      ...(existing || {}),
       slotIndex,
       rect: existing?.rect || rect,
-      metric: existing?.metric ?? null,
-      accepted: !!existing?.accepted,
-      bestScore: existing?.bestScore ?? null,
-      margin: existing?.margin ?? null,
-      bestCandidate: existing?.bestCandidate ?? null,
-      secondCandidate: existing?.secondCandidate ?? null,
       card: state === 'detected' ? existing.card : null,
       state
     };
@@ -1004,40 +1023,29 @@ function loadConvertedHandCards() {
 }
 
 function getCurrentHandCandidates() {
-  return Object.keys(loadConvertedHandCards()).filter((name) => !!name);
+  try {
+    const convertedHandPath = getConvertedHandPath();
+    if (!fileExists(convertedHandPath)) return [];
+    const mtimeMs = fs.statSync(convertedHandPath).mtimeMs;
+    if (mtimeMs === handCandidatesCache.mtimeMs) return handCandidatesCache.value;
+    handCandidatesCache = {
+      mtimeMs,
+      value: Object.keys(loadConvertedHandCards()).filter((name) => !!name)
+    };
+    return handCandidatesCache.value;
+  } catch (error) {
+    return Object.keys(loadConvertedHandCards()).filter((name) => !!name);
+  }
 }
 
 const MAX_CAPTURE_WIDTH  = 1920;
 const MAX_CAPTURE_HEIGHT = 1080;
 
-// Hide every overlay window we own (board / damage / cardList / controls)
-// from screen capture for the duration of `captureFn`, then restore.
-//
-// We toggle setContentProtection(true) around the capture rather than
-// flipping CSS opacity. Why:
-//   - Permanent setContentProtection(true) would also exclude the overlay
-//     from the user's own screen recorder — breaking their recording.
-//   - CSS opacity:0 + rAF actually stops painting the window for ~33 ms,
-//     which the user sees as a flicker every capture cycle.
-//   - Toggling setContentProtection only affects OS capture surfaces. The
-//     window keeps painting normally the entire time, so the user sees
-//     zero flicker. The user's recorder loses the overlay for the same
-//     ~50–100 ms the capture is running (so a brief gap shows up in
-//     recordings, ~2–3 dropped overlay frames per second), which is the
-//     unavoidable cost of running a screen-source capture in-app.
+// Overlays are excluded from screen capture permanently via setContentProtection
+// in createOverlayWindow, so this is a passthrough. Kept as a function to preserve
+// the call site in findGameWindowSource without restructuring.
 async function captureWithOverlaysHidden(captureFn) {
-  const windows = [boardWindow, damageWindow, cardListWindow, controlsWindow]
-    .filter((w) => w && !w.isDestroyed() && w.isVisible());
-  for (const w of windows) {
-    try { w.setContentProtection(true); } catch (e) {}
-  }
-  try {
-    return await captureFn();
-  } finally {
-    for (const w of windows) {
-      try { w.setContentProtection(false); } catch (e) {}
-    }
-  }
+  return captureFn();
 }
 
 async function findGameWindowSource() {
@@ -1124,6 +1132,7 @@ async function findGameWindowSource() {
 }
 
 async function performBoardCapture() {
+  const t0 = performance.now();
   const settings = loadSettings();
   const battleState = loadBattleState(settings);
   const realOpenSlots = battleState.openSlots || NUM_SLOTS;
@@ -1138,9 +1147,11 @@ async function performBoardCapture() {
   });
 
   const handCandidates = getCurrentHandCandidates();
+  const tLoad = performance.now();
 
   try {
     const source = await findGameWindowSource();
+    const tFindSource = performance.now();
     if (!source || !source.thumbnail || source.thumbnail.isEmpty()) {
       const captureMetrics = getCaptureOverlayMetrics();
       const missingFallbackSlotRects = getFallbackSlotRectsForSize(captureMetrics.screenshotSize);
@@ -1186,6 +1197,7 @@ async function performBoardCapture() {
     }
 
     const talentCapture = detectTalents(source.thumbnail);
+    const tDetectTalents = performance.now();
 
     // For any detected talent, add its Chinese name to hand candidates.
     // Personal card templates (e.g. images/personal/FengXu/阴符玉简1.png) share their
@@ -1204,6 +1216,7 @@ async function performBoardCapture() {
           slotResults: [],
           debug: { reason: 'no-hand-candidates' }
         };
+    const tDetectSlots = performance.now();
     const screenshotSize = getNativeImagePixelSize(source.thumbnail);
     const contentRect = getNativeImageOpaqueBounds(source.thumbnail);
     // Keep the damage/debug overlay window at full-display logical size.
@@ -1227,8 +1240,10 @@ async function performBoardCapture() {
       talents: talentCapture.talents.map((t) => ({ position: t.position, name: t.name, detected: t.detected }))
     });
     let damagePreview;
+    let simSkipped = false;
     if (simulationSignature === lastSimulationSignature && lastSimulationPreview) {
       damagePreview = lastSimulationPreview;
+      simSkipped = true;
     } else {
       damagePreview = await simulateFirstEightTurns(activeSlots, {
         deckSlots: realOpenSlots,
@@ -1239,6 +1254,7 @@ async function performBoardCapture() {
       lastSimulationSignature = simulationSignature;
       lastSimulationPreview = damagePreview;
     }
+    const tSimulate = performance.now();
 
     emitBoardDetectionUpdated({
       slots,
@@ -1281,6 +1297,21 @@ async function performBoardCapture() {
       detectorRects: slotResults.map((r) => r?.rect || null),
       projectedRects: projectedSlotResults.map((r) => r?.rect || null)
     });
+
+    const tEmit = performance.now();
+    const totalMs = tEmit - t0;
+    if (totalMs > 250) {
+      appendStartupLog('slow board capture', {
+        totalMs:         Math.round(totalMs),
+        loadStateMs:     Math.round(tLoad         - t0),
+        findSourceMs:    Math.round(tFindSource   - tLoad),
+        detectTalentsMs: Math.round(tDetectTalents - tFindSource),
+        detectSlotsMs:   Math.round(tDetectSlots  - tDetectTalents),
+        simMs:           Math.round(tSimulate     - tDetectSlots),
+        simSkipped,
+        emitMs:          Math.round(tEmit         - tSimulate)
+      });
+    }
   } catch (error) {
     const errorCaptureMetrics = getCaptureOverlayMetrics();
     const errorFallbackSlotRects = getFallbackSlotRectsForSize(errorCaptureMetrics.screenshotSize);
