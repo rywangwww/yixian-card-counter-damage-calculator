@@ -903,7 +903,7 @@ function calculateDeckCards(operations) {
         if (!cardCounts[op.srcCard.name]) {
           cardCounts[op.srcCard.name] = { count: 0 };
         }
-        cardCounts[op.srcCard.name].count += 2 * getDeckRemovalCount(op.srcCard);
+        cardCounts[op.srcCard.name].count += 3 * getDeckRemovalCount(op.srcCard);
       }
 
       if (!cardCounts[op.dstCard.name]) {
